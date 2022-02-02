@@ -21,6 +21,8 @@ const Home = () => {
 
     const form = new FormData(e.target);
     setList((prev = []) => [...prev, form.get("todo__item")]);
+
+    e.target.reset();
   }, []);
 
   const handleDelete = React.useCallback(
