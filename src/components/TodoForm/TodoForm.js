@@ -8,6 +8,7 @@ const TodoForm = ({ handleSubmit }) => (
       mt: 1,
     }}
     onSubmit={handleSubmit}
+    data-testid="todo__form"
   >
     <TextField
       margin="normal"
@@ -18,8 +19,17 @@ const TodoForm = ({ handleSubmit }) => (
       name="todo__item"
       autoFocus
       type="text"
+      inputProps={{
+        "data-testid": "todo__item",
+      }}
     />
-    <Button type="submit" fullWidth variant="contained" sx={{ mt: 1, mb: 2 }}>
+    <Button
+      type="submit"
+      fullWidth
+      variant="contained"
+      sx={{ mt: 1, mb: 2 }}
+      data-testid="todo__add"
+    >
       ADD
     </Button>
   </Box>
