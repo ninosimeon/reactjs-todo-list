@@ -13,63 +13,107 @@ import {
 import { Box } from "@mui/system";
 import React from "react";
 
-const Home = () => (
-  <Container component="main" maxWidth="lg">
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-      }}
-    >
-      <Typography variant="h1">TODO List</Typography>
+const Home = () => {
+  const [list, setList] = React.useState([]);
+
+  const handleSubmit = React.useCallback((e) => {
+    e.preventDefault();
+
+    const form = new FormData(e.target);
+    setList((prev = []) => [...prev, form.get("todo__item")]);
+  }, []);
+
+  const handleDelete = React.useCallback(
+    (index = 0) =>
+      () => {
+        setList((prev = []) => prev.filter((_, i) => i !== index));
+      },
+    []
+  );
+
+  return (
+    <Container component="main" maxWidth="lg">
       <Box
-        component="form"
-        noValidate
-        sx={{ mt: 1, display: "flex", flexDirection: "column", width: "100%" }}
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
       >
-        <TextField
-          margin="normal"
-          required
-          fullWidth
-          id="todo-item"
-          label="TODO item"
-          name="todo-item"
-          autoFocus
-        />
-        <Button
-          type="submit"
-          fullWidth
-          variant="contained"
-          sx={{ mt: 1, mb: 2 }}
+        <Typography variant="h1">TODO List</Typography>
+        <Box
+          component="form"
+          sx={{
+            mt: 1,
+            display: "flex",
+            flexDirection: "column",
+            width: "100%",
+          }}
+          onSubmit={handleSubmit}
         >
-          ADD
-        </Button>
-        <Divider />
-        <List>
-          <ListItem
-            secondaryAction={
-              <IconButton edge="end" aria-label="delete">
-                <DeleteIcon />
-              </IconButton>
-            }
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            id="todo__item"
+            label="TODO item"
+            name="todo__item"
+            autoFocus
+            type="text"
+          />
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            sx={{ mt: 1, mb: 2 }}
           >
-            <ListItemText primary="Single-line item" />
-          </ListItem>
-          <Divider variant="inset" component="li" />
-          <ListItem
-            secondaryAction={
-              <IconButton edge="end" aria-label="delete">
-                <DeleteIcon />
-              </IconButton>
-            }
-          >
-            <ListItemText primary="Single-line item" />
-          </ListItem>
-        </List>
+            ADD
+          </Button>
+          <Divider />
+          <List>
+            {list?.map((item, index) => {
+              if (!!index)
+                return (
+                  <React.Fragment key={index}>
+                    <Divider variant="inset" component="li" />
+                    <ListItem
+                      secondaryAction={
+                        <IconButton
+                          edge="end"
+                          aria-label="delete"
+                          onClick={handleDelete(index)}
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      }
+                    >
+                      <ListItemText primary={item} />
+                    </ListItem>
+                  </React.Fragment>
+                );
+
+              return (
+                <ListItem
+                  key={index}
+                  secondaryAction={
+                    <IconButton
+                      edge="end"
+                      aria-label="delete"
+                      onClick={handleDelete(index)}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  }
+                >
+                  <ListItemText primary={item} />
+                </ListItem>
+              );
+            })}
+          </List>
+        </Box>
       </Box>
-    </Box>
-  </Container>
-);
+    </Container>
+  );
+};
 
 export default Home;
